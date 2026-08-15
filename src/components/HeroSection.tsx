@@ -105,7 +105,7 @@ export default function HeroSection() {
           >
             {ROLES[roleIndex]}
           </span>{' '}
-          lives in Chicago.
+          lives in Nigeria.
         </div>
 
         {/* Description */}
