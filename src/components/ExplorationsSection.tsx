@@ -4,7 +4,6 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X } from 'lucide-react'
 
-// Register ScrollTrigger plugin
 gsap.registerPlugin(ScrollTrigger)
 
 interface ExplorationItem {
@@ -60,7 +59,6 @@ export default function ExplorationsSection() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // 1. Pinned Center Text Section (Layer 1)
       ScrollTrigger.create({
         trigger: sectionRef.current,
         start: "top top",
@@ -69,8 +67,6 @@ export default function ExplorationsSection() {
         pinSpacing: false,
       })
 
-      // 2. Parallax Scrolling Columns (Layer 2)
-      // Left Column scrolls faster (upwards)
       gsap.fromTo(".col-left-card", 
         { y: 80 },
         {
@@ -85,7 +81,6 @@ export default function ExplorationsSection() {
         }
       )
 
-      // Right Column scrolls slower (downwards/slower movement)
       gsap.fromTo(".col-right-card", 
         { y: -100 },
         {
@@ -109,44 +104,25 @@ export default function ExplorationsSection() {
       ref={sectionRef} 
       className="relative w-screen min-h-[300vh] bg-bg overflow-visible"
     >
-      {/* Layer 1: Pinned Center (z-10) */}
       <div 
         ref={pinRef} 
         className="absolute inset-0 w-full h-screen flex flex-col justify-center items-center z-10 pointer-events-none"
       >
-        <div className="text-center space-y-6 max-w-lg px-6 pointer-events-auto">
-          <span className="text-xs text-muted uppercase tracking-[0.3em] font-medium block">
+        <div className="text-center space-y-5 max-w-lg px-6 pointer-events-auto">
+          <span className="text-xs text-muted uppercase tracking-[0.25em] font-medium block">
             Explorations
           </span>
-          <h2 className="text-5xl md:text-7xl font-light tracking-tight text-text-primary leading-tight">
+          <h2 className="text-4xl md:text-6xl lg:text-7xl font-light tracking-tight text-text-primary leading-tight">
             Visual <span className="font-display italic text-text-primary/95">playground</span>
           </h2>
           <p className="text-sm md:text-base text-muted max-w-sm mx-auto leading-relaxed">
-            A sandbox of visual concepts, 3D renders, and digital art experiments.
+            A collection of visual experiments, renders, and design studies.
           </p>
-          
-          {/* Dribbble Button */}
-          <div className="pt-4">
-            <a 
-              href="https://dribbble.com" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="relative inline-flex rounded-full p-[1px] group/dribbble"
-            >
-              <div className="absolute inset-0 rounded-full bg-transparent group-hover/dribbble:accent-gradient transition-all duration-500 animate-gradient-shift" />
-              <div className="relative px-6 py-3 bg-surface border border-stroke rounded-full text-xs font-semibold text-text-primary flex items-center gap-2 group-hover/dribbble:border-transparent transition-all duration-300">
-                Follow on Dribbble <span className="inline-block transition-transform duration-300 group-hover/dribbble:translate-x-0.5">↗</span>
-              </div>
-            </a>
-          </div>
         </div>
       </div>
 
-      {/* Layer 2: Parallax Columns (z-20, absolute/scrolling relative to page) */}
       <div className="relative w-full z-20 flex justify-center px-4 py-32 pointer-events-none">
         <div className="grid grid-cols-2 gap-8 md:gap-32 w-full max-w-[1200px] items-start">
-          
-          {/* Column 1 (Left) - Items 0, 2, 4 */}
           <div className="flex flex-col gap-32 md:gap-64 pt-24">
             {ITEMS.filter((_, idx) => idx % 2 === 0).map((item) => (
               <div 
@@ -166,7 +142,6 @@ export default function ExplorationsSection() {
             ))}
           </div>
 
-          {/* Column 2 (Right) - Items 1, 3, 5 */}
           <div className="flex flex-col gap-32 md:gap-64 pt-64 md:pt-96">
             {ITEMS.filter((_, idx) => idx % 2 !== 0).map((item) => (
               <div 
@@ -185,11 +160,9 @@ export default function ExplorationsSection() {
               </div>
             ))}
           </div>
-
         </div>
       </div>
 
-      {/* Lightbox Modal */}
       <AnimatePresence>
         {lightboxImage && (
           <motion.div 
@@ -199,22 +172,21 @@ export default function ExplorationsSection() {
             onClick={() => setLightboxImage(null)}
             className="fixed inset-0 z-[10000] bg-black/90 backdrop-blur-md flex items-center justify-center p-4 cursor-zoom-out"
           >
-            {/* Close Button */}
             <button 
               onClick={() => setLightboxImage(null)}
               className="absolute top-6 right-6 p-2 rounded-full bg-white/10 hover:bg-white/20 text-text-primary transition-colors z-10"
+              aria-label="Close"
             >
               <X className="w-6 h-6" />
             </button>
 
-            {/* Main Image */}
             <motion.div 
-              initial={{ scale: 0.95 }}
+              initial={{ scale: 0.96 }}
               animate={{ scale: 1 }}
-              exit={{ scale: 0.95 }}
-              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              exit={{ scale: 0.96 }}
+              transition={{ type: "spring", damping: 26, stiffness: 220 }}
               className="relative max-w-4xl w-full max-h-[85vh] rounded-2xl overflow-hidden border border-white/10 shadow-2xl"
-              onClick={(e) => e.stopPropagation()} // Prevent close on image click
+              onClick={(e) => e.stopPropagation()}
             >
               <img 
                 src={lightboxImage} 

@@ -30,7 +30,7 @@ const ENTRIES: JournalEntry[] = [
     image: "https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?q=80&w=200&auto=format&fit=crop",
     content: [
       "Walk into a modernist concrete building, and you will notice how structural load-bearing lines are exposed, how glass frames the landscape, and how empty space is treated as an active element. Minimalist architecture strips away ornament to reveal the pure essence of form.",
-      "This physical philosophy translates directly into digital interface design. In UI/UX, we refer to this as negative space, structure, and hierarchy. Just as a architect uses physical columns to guide visitors through a building, a software engineer uses typography weights and grids to guide eyes through information.",
+      "This physical philosophy translates directly into digital interface design. In UI/UX, we refer to this as negative space, structure, and hierarchy. Just as an architect uses physical columns to guide visitors through a building, a software engineer uses typography weights and grids to guide eyes through information.",
       "By stripping away unnecessary borders, drop shadows, and high-frequency patterns, we allow the content itself to shine. Our interface becomes transparent. The user doesn't focus on the browser window; they focus on the data, the product, or the narrative.",
       "At Vura Tech Hub, we study structural minimalism. We replace noisy components with quiet layouts, letting typography do the heavy lifting. In a world full of digital noise, silence is the ultimate premium feature."
     ]
@@ -55,7 +55,7 @@ const ENTRIES: JournalEntry[] = [
     content: [
       "In the early days of the web, tech companies focused strictly on function: database queries, load times, and raw utility. Designers later focused strictly on form: gradients, drop-shadows, and illustrative layouts. Today, premium software demands the seamless unification of both.",
       "Form is how a product feels—its color palettes, typography, micro-interactions, and visual harmony. Function is how it works—its database schemas, API latencies, and scalability. Brand narrative is the story it tells.",
-      "When we engineered Vura Bank, we didn't just build a secure bank aggregation backend. We designed a interface that felt reassuring, using deep dark colors and typography that communicated stability. The technical robustness (function) was wrapped in premium design aesthetics (form) to build trust (narrative).",
+      "When we engineered Vura Bank, we didn't just build a secure bank aggregation backend. We designed an interface that felt reassuring, using deep dark colors and typography that communicated stability. The technical robustness (function) was wrapped in premium design aesthetics (form) to build trust (narrative).",
       "As software creators, we must never compromise on either side of the spectrum. A fast application that looks outdated loses users; a beautiful application that is slow or insecure fails completely. The magic is in the synthesis."
     ]
   }
@@ -68,51 +68,40 @@ export default function JournalSection() {
     <section id="journal" className="bg-bg py-16 md:py-24 border-t border-stroke relative">
       <div className="max-w-[1200px] mx-auto px-6 md:px-10 lg:px-16">
         
-        {/* Header - same pattern as Selected Work */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 28 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 1, ease: [0.25, 0.1, 0.25, 1] }}
-          className="flex flex-col md:flex-row md:items-end justify-between mb-12 md:mb-16 gap-6"
+          transition={{ duration: 0.9, ease: [0.25, 0.1, 0.25, 1] }}
+          className="mb-12 md:mb-16"
         >
-          <div className="space-y-4">
+          <div className="space-y-3">
             <div className="flex items-center gap-3">
               <span className="w-8 h-px bg-stroke" />
-              <span className="text-xs text-muted uppercase tracking-[0.3em] font-medium">
+              <span className="text-xs text-muted uppercase tracking-[0.25em] font-medium">
                 Journal
               </span>
             </div>
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-light tracking-tight text-text-primary leading-tight">
+            <h2 className="text-3xl md:text-5xl lg:text-6xl font-light tracking-tight text-text-primary leading-tight">
               Recent <span className="font-display italic text-text-primary/95">thoughts</span>
             </h2>
             <p className="text-sm md:text-base text-muted max-w-md leading-relaxed">
-              Insights on design process, modern engineering, and creative philosophies.
+              Notes on design process, engineering, and building products that last.
             </p>
           </div>
-
-          {/* Desktop Only View All Button */}
-          <button className="hidden md:inline-flex relative rounded-full p-[1px] group/all">
-            <div className="absolute inset-0 rounded-full bg-transparent group-hover/all:accent-gradient transition-all duration-500 animate-gradient-shift" />
-            <div className="relative px-6 py-3 bg-surface border border-stroke rounded-full text-xs font-semibold text-text-primary flex items-center gap-2 group-hover/all:border-transparent transition-all duration-300">
-              View all articles <span className="inline-block transition-transform duration-300 group-hover/all:translate-x-0.5">→</span>
-            </div>
-          </button>
         </motion.div>
 
-        {/* Journal Entries List */}
-        <div className="max-w-4xl mx-auto flex flex-col gap-4">
+        <div className="max-w-4xl mx-auto flex flex-col gap-3">
           {ENTRIES.map((entry, idx) => (
             <motion.div
               key={entry.title}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 18 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.6, delay: idx * 0.1, ease: [0.25, 0.1, 0.25, 1] }}
+              transition={{ duration: 0.55, delay: idx * 0.08, ease: [0.25, 0.1, 0.25, 1] }}
               onClick={() => setActiveEntry(entry)}
               className="flex items-center gap-4 sm:gap-6 p-3 sm:p-4 bg-surface/30 hover:bg-surface border border-stroke rounded-[40px] sm:rounded-full transition-colors duration-300 cursor-pointer group"
             >
-              {/* Image Circle */}
               <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full overflow-hidden shrink-0 border border-stroke">
                 <img
                   src={entry.image}
@@ -121,14 +110,11 @@ export default function JournalSection() {
                 />
               </div>
 
-              {/* Title & Metadata */}
               <div className="flex flex-col sm:flex-row sm:items-center justify-between grow min-w-0 pr-2 sm:pr-4 gap-1 sm:gap-4">
-                {/* Title */}
                 <h3 className="text-sm sm:text-base font-light text-text-primary/90 group-hover:text-text-primary transition-colors duration-300 truncate">
                   {entry.title}
                 </h3>
 
-                {/* Read Time & Date */}
                 <div className="flex items-center gap-3 shrink-0 text-[11px] text-muted">
                   <span className="whitespace-nowrap">{entry.date}</span>
                   <span className="w-1 h-1 bg-stroke rounded-full hidden sm:inline-block" />
@@ -138,14 +124,11 @@ export default function JournalSection() {
             </motion.div>
           ))}
         </div>
-
       </div>
 
-      {/* Slide-out Drawer Panel */}
       <AnimatePresence>
         {activeEntry && (
           <>
-            {/* Backdrop Overlay */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -154,30 +137,27 @@ export default function JournalSection() {
               className="fixed inset-0 z-[9999] bg-black/75 backdrop-blur-sm cursor-zoom-out"
             />
 
-            {/* Slide-out Panel */}
             <motion.div
               initial={{ x: '100%' }}
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
-              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+              transition={{ type: 'spring', damping: 26, stiffness: 220 }}
               className="fixed inset-y-0 right-0 z-[10000] w-full max-w-xl bg-surface border-l border-stroke shadow-2xl flex flex-col cursor-default"
             >
-              {/* Drawer Header */}
               <div className="p-6 sm:p-8 border-b border-stroke flex items-center justify-between shrink-0">
-                <span className="text-[10px] text-muted uppercase tracking-[0.3em] font-medium">
+                <span className="text-[10px] text-muted uppercase tracking-[0.25em] font-medium">
                   Journal Entry
                 </span>
                 <button
                   onClick={() => setActiveEntry(null)}
                   className="p-1.5 rounded-full bg-stroke/50 hover:bg-stroke text-text-primary transition-colors"
+                  aria-label="Close article"
                 >
                   <X className="w-4 h-4" />
                 </button>
               </div>
 
-              {/* Drawer Body (Scrollable) */}
               <div className="p-6 sm:p-8 overflow-y-auto grow space-y-6 select-text text-left">
-                {/* Meta details */}
                 <div className="flex items-center gap-4 text-xs text-muted font-medium mb-2">
                   <span className="flex items-center gap-1.5">
                     <Calendar className="w-3.5 h-3.5" />
@@ -190,12 +170,10 @@ export default function JournalSection() {
                   </span>
                 </div>
 
-                {/* Article Title */}
                 <h3 className="text-2xl sm:text-3xl font-display italic text-text-primary leading-tight">
                   {activeEntry.title}
                 </h3>
 
-                {/* Article Header Image */}
                 <div className="w-full h-48 rounded-2xl overflow-hidden border border-stroke mt-4">
                   <img
                     src={activeEntry.image}
@@ -204,7 +182,6 @@ export default function JournalSection() {
                   />
                 </div>
 
-                {/* Content Paragraphs */}
                 <div className="space-y-4 pt-4 text-sm sm:text-base text-muted leading-relaxed font-light">
                   {activeEntry.content.map((paragraph, index) => (
                     <p key={index}>{paragraph}</p>
@@ -212,13 +189,12 @@ export default function JournalSection() {
                 </div>
               </div>
 
-              {/* Drawer Footer */}
               <div className="p-6 sm:p-8 border-t border-stroke shrink-0 bg-surface/50">
                 <button
                   onClick={() => setActiveEntry(null)}
                   className="w-full py-3 bg-stroke hover:bg-stroke/80 text-text-primary text-xs font-semibold rounded-full uppercase tracking-wider flex items-center justify-center gap-2 transition-colors"
                 >
-                  Close Article <ArrowRight className="w-3.5 h-3.5" />
+                  Close <ArrowRight className="w-3.5 h-3.5" />
                 </button>
               </div>
             </motion.div>
