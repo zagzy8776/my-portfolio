@@ -1,13 +1,13 @@
-import { useEffect, useState, useRef } from 'react'
-import Hls from 'hls.js'
+import { useEffect, useState, useRef, lazy, Suspense } from 'react'
 import gsap from 'gsap'
+
+const Scene3D = lazy(() => import('./Scene3D'))
 
 const ROLES = ["Creative", "Fullstack", "Founder", "Scholar"]
 
 export default function HeroSection() {
   const [roleIndex, setRoleIndex] = useState(0)
   const containerRef = useRef<HTMLDivElement>(null)
-  const videoRef = useRef<HTMLVideoElement>(null)
 
   // Cycle through roles every 2200ms
   useEffect(() => {
@@ -15,25 +15,6 @@ export default function HeroSection() {
       setRoleIndex((prev) => (prev + 1) % ROLES.length)
     }, 2200)
     return () => clearInterval(interval)
-  }, [])
-
-  // Load HLS Video Background
-  useEffect(() => {
-    const video = videoRef.current
-    if (!video) return
-
-    const src = 'https://stream.mux.com/Aa02T7oM1wH5Mk5EEVDYhbZ1ChcdhRsS2m1NYyx4Ua1g.m3u8'
-
-    if (Hls.isSupported()) {
-      const hls = new Hls()
-      hls.loadSource(src)
-      hls.attachMedia(video)
-      return () => {
-        hls.destroy()
-      }
-    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-      video.src = src
-    }
   }, [])
 
   // GSAP Entrance animation
@@ -68,19 +49,14 @@ export default function HeroSection() {
       ref={containerRef} 
       className="relative w-screen h-screen flex flex-col items-center justify-center overflow-hidden bg-bg text-center px-4"
     >
-      {/* Background Video */}
-      <div className="absolute inset-0 w-full h-full z-0 overflow-hidden">
-        <video
-          ref={videoRef}
-          autoPlay
-          muted
-          loop
-          playsInline
-          className="absolute top-1/2 left-1/2 min-w-full min-h-full object-cover -translate-x-1/2 -translate-y-1/2 pointer-events-none"
-        />
-        {/* Dark overlay */}
-        <div className="absolute inset-0 bg-black/30 z-10" />
-        {/* Bottom fade */}
+      {/* 3D Background Scene */}
+      <div className="absolute inset-0 w-full h-full z-0 overflow-hidden pointer-events-none">
+        <Suspense fallback={<div className="absolute inset-0 bg-bg" />}>
+          <Scene3D />
+        </Suspense>
+        {/* Subtle overlay for text legibility */}
+        <div className="absolute inset-0 bg-black/10 z-10" />
+        {/* Bottom fade into page */}
         <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-bg to-transparent z-20" />
       </div>
 

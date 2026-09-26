@@ -1,15 +1,18 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { X } from 'lucide-react'
+import { X, TrendingUp, Shirt, Search, UtensilsCrossed, HeartPulse } from 'lucide-react'
 
 interface Project {
   title: string
   subtitle: string
-  image: string
+  image?: string
+  icon?: typeof TrendingUp
+  gradient?: string
   colSpan: string
   aspectRatio: string
   link?: string
   isNote?: boolean
+  status?: string
 }
 
 const PROJECTS: Project[] = [
@@ -38,11 +41,52 @@ const PROJECTS: Project[] = [
     link: "https://tushaesthestics.com"
   },
   {
+    title: "mt5bbot",
+    subtitle: "Automated MT5/Exness trading bot with a web dashboard",
+    icon: TrendingUp,
+    gradient: "from-[#1a2e44] via-[#0a0a0a] to-[#4E85BF]/30",
+    colSpan: "md:col-span-4",
+    aspectRatio: "aspect-[4/5] md:aspect-auto md:h-[380px]",
+  },
+  {
+    title: "BV Stitches",
+    subtitle: "Immersive 3D fashion & atelier experience",
+    icon: Shirt,
+    gradient: "from-[#3a1a44] via-[#0a0a0a] to-[#89AACC]/30",
+    colSpan: "md:col-span-4",
+    aspectRatio: "aspect-[4/5] md:aspect-auto md:h-[380px]",
+  },
+  {
+    title: "VEEDA",
+    subtitle: "Clinical wellness intelligence with vital-sign monitoring",
+    icon: HeartPulse,
+    gradient: "from-[#1a4430] via-[#0a0a0a] to-[#4E85BF]/30",
+    colSpan: "md:col-span-4",
+    aspectRatio: "aspect-[4/5] md:aspect-auto md:h-[380px]",
+  },
+  {
+    title: "Sister's Kitchen Store",
+    subtitle: "Standalone storefront for premium kitchen utensils",
+    icon: UtensilsCrossed,
+    gradient: "from-[#442a1a] via-[#0a0a0a] to-[#89AACC]/30",
+    colSpan: "md:col-span-6",
+    aspectRatio: "aspect-[16/10] md:aspect-auto md:h-[380px]",
+  },
+  {
+    title: "Instant SEO",
+    subtitle: "Connect your site & accounts for an instant SEO boost",
+    icon: Search,
+    gradient: "from-[#0a2a44] via-[#0a0a0a] to-[#4E85BF]/30",
+    colSpan: "md:col-span-6",
+    aspectRatio: "aspect-[16/10] md:aspect-auto md:h-[380px]",
+    status: "In progress"
+  },
+  {
     title: "Vura Tech Hub",
     subtitle: "Enterprise & digital solutions by Ekenedirichukwu Isdore Amadi",
     image: "/isdore.png",
-    colSpan: "md:col-span-7",
-    aspectRatio: "aspect-[16/10] md:aspect-auto md:h-[480px]",
+    colSpan: "md:col-span-12",
+    aspectRatio: "aspect-[21/9] md:aspect-auto md:h-[320px]",
     isNote: true
   }
 ]
@@ -108,13 +152,27 @@ export default function WorksSection() {
                   window.open(project.link, '_blank', 'noopener,noreferrer')
                 }
               }}
-              className={`${project.colSpan} ${project.aspectRatio} group relative bg-surface border border-stroke rounded-3xl overflow-hidden cursor-pointer`}
+              className={`${project.colSpan} ${project.aspectRatio} group relative bg-surface border border-stroke rounded-3xl overflow-hidden ${project.image || project.link ? 'cursor-pointer' : 'cursor-default'}`}
             >
-              <img
-                src={project.image}
-                alt={project.title}
-                className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-              />
+              {project.image ? (
+                <img
+                  src={project.image}
+                  alt={project.title}
+                  className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                />
+              ) : (
+                <div className={`w-full h-full bg-gradient-to-br ${project.gradient} flex items-center justify-center transition-transform duration-700 ease-out group-hover:scale-105`}>
+                  {project.icon && (
+                    <project.icon className="w-14 h-14 md:w-16 md:h-16 text-text-primary/25" strokeWidth={1} />
+                  )}
+                </div>
+              )}
+
+              {project.status && (
+                <div className="absolute top-5 right-5 z-20 px-3 py-1 rounded-full bg-bg/70 backdrop-blur-sm border border-stroke text-[10px] uppercase tracking-[0.15em] text-muted">
+                  {project.status}
+                </div>
+              )}
 
               <div className="absolute inset-0 halftone-overlay opacity-20 mix-blend-multiply pointer-events-none" />
 
@@ -132,15 +190,17 @@ export default function WorksSection() {
                   <p className="text-xs text-text-primary/60 tracking-wider">
                     {project.subtitle}
                   </p>
-                  <div className="relative inline-flex rounded-full p-[1.5px] shadow-lg shadow-black/20 transform scale-90 group-hover:scale-100 transition-transform duration-500">
-                    <div className="absolute inset-0 rounded-full accent-gradient" />
-                    <div className="relative px-5 py-2.5 bg-white text-bg rounded-full text-xs font-semibold flex items-center gap-1.5">
-                      <span>{project.isNote ? 'Read' : 'View'} — </span>
-                      <span className="font-display italic font-bold">
-                        {project.title}
-                      </span>
+                  {(project.link || project.isNote) && (
+                    <div className="relative inline-flex rounded-full p-[1.5px] shadow-lg shadow-black/20 transform scale-90 group-hover:scale-100 transition-transform duration-500">
+                      <div className="absolute inset-0 rounded-full accent-gradient" />
+                      <div className="relative px-5 py-2.5 bg-white text-bg rounded-full text-xs font-semibold flex items-center gap-1.5">
+                        <span>{project.isNote ? 'Read' : 'View'} — </span>
+                        <span className="font-display italic font-bold">
+                          {project.title}
+                        </span>
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </div>
               </div>
             </motion.div>
