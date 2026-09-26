@@ -1,44 +1,75 @@
 import { useRef, useMemo, Suspense } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import { MeshDistortMaterial, Float, Sparkles } from '@react-three/drei'
+import { Float, Sparkles } from '@react-three/drei'
 import * as THREE from 'three'
 
-// --- Core distorted icosahedron: the centerpiece "identity" shape ---
+// --- Professional faceted "mind/builder" core: human-like profile silhouette ---
 function CoreShape() {
-  const meshRef = useRef<THREE.Mesh>(null)
+  const meshRef = useRef<THREE.Group>(null)
   const { viewport, pointer } = useThree()
 
   useFrame((state) => {
     if (!meshRef.current) return
     const t = state.clock.getElapsedTime()
 
-    // Gentle continuous rotation
-    meshRef.current.rotation.x = Math.sin(t * 0.15) * 0.15 + t * 0.06
-    meshRef.current.rotation.y += 0.0025
+    // Subtle, confident rotation
+    meshRef.current.rotation.y = Math.sin(t * 0.08) * 0.08
+    meshRef.current.rotation.x = Math.cos(t * 0.1) * 0.05 + 0.1
 
-    // Subtle parallax toward the cursor
-    const targetX = (pointer.x * viewport.width) / 24
-    const targetY = (pointer.y * viewport.height) / 24
-    meshRef.current.position.x += (targetX - meshRef.current.position.x) * 0.03
-    meshRef.current.position.y += (targetY - meshRef.current.position.y) * 0.03
+    // Parallax follow cursor
+    const targetX = (pointer.x * viewport.width) / 32
+    const targetY = (pointer.y * viewport.height) / 32
+    meshRef.current.position.x += (targetX - meshRef.current.position.x) * 0.04
+    meshRef.current.position.y += (targetY - meshRef.current.position.y) * 0.04
   })
 
   return (
-    <Float speed={1.4} rotationIntensity={0.35} floatIntensity={0.6}>
-      <mesh ref={meshRef} scale={2.1}>
-        <icosahedronGeometry args={[1, 24]} />
-        <MeshDistortMaterial
-          color="#4E85BF"
-          emissive="#1a2e44"
-          emissiveIntensity={0.5}
-          roughness={0.15}
-          metalness={0.6}
-          distort={0.35}
-          speed={1.6}
-          clearcoat={0.6}
-          clearcoatRoughness={0.2}
-        />
-      </mesh>
+    <Float speed={0.8} rotationIntensity={0.15} floatIntensity={0.4}>
+      <group ref={meshRef} scale={1.8}>
+        {/* Main body/core — geometric faceted form */}
+        <mesh position={[0, 0, 0]}>
+          <dodecahedronGeometry args={[0.9, 0]} />
+          <meshStandardMaterial
+            color="#4E85BF"
+            metalness={0.75}
+            roughness={0.18}
+            envMapIntensity={1.2}
+          />
+        </mesh>
+
+        {/* Upper accent — suggests "mind" or "head" */}
+        <mesh position={[0, 1.2, 0]} scale={[0.7, 0.8, 0.7]}>
+          <octahedronGeometry args={[0.65, 0]} />
+          <meshStandardMaterial
+            color="#89AACC"
+            metalness={0.65}
+            roughness={0.2}
+          />
+        </mesh>
+
+        {/* Side accent panels — depth, sophistication */}
+        <mesh position={[-0.95, 0, 0]} scale={[0.35, 1.1, 0.5]} rotation={[0, 0, 0.2]}>
+          <boxGeometry args={[1, 1, 1]} />
+          <meshStandardMaterial
+            color="#4E85BF"
+            metalness={0.6}
+            roughness={0.25}
+            transparent
+            opacity={0.8}
+          />
+        </mesh>
+
+        <mesh position={[0.95, 0, 0]} scale={[0.35, 1.1, 0.5]} rotation={[0, 0, -0.2]}>
+          <boxGeometry args={[1, 1, 1]} />
+          <meshStandardMaterial
+            color="#4E85BF"
+            metalness={0.6}
+            roughness={0.25}
+            transparent
+            opacity={0.8}
+          />
+        </mesh>
+      </group>
     </Float>
   )
 }
@@ -83,20 +114,29 @@ export default function Scene3D() {
       className="!absolute inset-0"
     >
       <color attach="background" args={['#0a0a0a']} />
-      <fog attach="fog" args={['#0a0a0a', 6, 13]} />
+      {/* Minimal fog for depth — much less blur */}
+      <fog attach="fog" args={['#0a0a0a', 8, 20]} />
 
-      <ambientLight intensity={0.35} color="#8aa9c9" />
-      <directionalLight position={[4, 6, 5]} intensity={1.4} color="#89AACC" />
-      <pointLight position={[-5, -3, 3]} intensity={2.2} color="#4E85BF" distance={18} />
-      <pointLight position={[3, -4, -2]} intensity={1.4} color="#89AACC" distance={16} />
-      {/* Rim light standing in for an environment map — keeps the scene fully local, no external HDR fetch */}
-      <pointLight position={[0, 2, -6]} intensity={2.6} color="#ffffff" distance={20} />
+      {/* Professional three-point lighting */}
+      {/* Key light — front-left, warm but professional */}
+      <directionalLight position={[5, 8, 6]} intensity={1.6} color="#e8f0ff" />
+      
+      {/* Fill light — opposite side, softer, keeps shadows readable */}
+      <directionalLight position={[-6, 3, -8]} intensity={0.5} color="#89AACC" />
+      
+      {/* Rim/back light — separates subject from background */}
+      <pointLight position={[0, 5, -12]} intensity={2.0} color="#ffffff" distance={22} />
+      
+      {/* Subtle ambient — fills without washing out */}
+      <ambientLight intensity={0.25} color="#a8c5dd" />
 
       <Suspense fallback={null}>
         <CoreShape />
-        <OrbitRing radius={2.9} tilt={1.1} speed={0.08} color="#89AACC" />
-        <OrbitRing radius={3.4} tilt={0.6} speed={-0.05} color="#4E85BF" />
-        <Sparkles count={sparkleCount} scale={9} size={1.4} speed={0.25} color="#89AACC" opacity={0.5} />
+        {/* Minimal orbit rings — intentional structure, not decoration */}
+        <OrbitRing radius={3.2} tilt={1.3} speed={0.06} color="#89AACC" />
+        <OrbitRing radius={4.1} tilt={0.4} speed={-0.04} color="#4E85BF" />
+        {/* Sparse, purposeful sparkles — tech/data feel, not magical */}
+        <Sparkles count={Math.max(30, sparkleCount / 3)} scale={10} size={0.8} speed={0.15} color="#ffffff" opacity={0.4} />
       </Suspense>
 
       <Rig />
