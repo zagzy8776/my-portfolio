@@ -1,14 +1,12 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, TrendingUp, Shirt, HeartPulse } from 'lucide-react'
+import { X } from 'lucide-react'
 
 interface Project {
   title: string
   subtitle: string
   image?: string
-  icon?: typeof TrendingUp
-  gradient?: string
   colSpan: string
   aspectRatio: string
   link?: string
@@ -48,8 +46,7 @@ const PROJECTS: Project[] = [
   {
     title: "MT5 Control Room",
     subtitle: "Algorithmic trading dashboard for MetaTrader 5 — signals, risk, execution",
-    icon: TrendingUp,
-    gradient: "from-[#1a2e44] via-[#0a0a0a] to-[#4E85BF]/30",
+    image: "/mt5.png",
     colSpan: "md:col-span-4",
     aspectRatio: "aspect-[4/5] md:aspect-auto md:h-[380px]",
     slug: "mt5-control-room",
@@ -58,18 +55,16 @@ const PROJECTS: Project[] = [
   {
     title: "BV Stitches",
     subtitle: "Immersive 3D fashion & atelier experience",
-    icon: Shirt,
-    gradient: "from-[#3a1a44] via-[#0a0a0a] to-[#89AACC]/30",
+    image: "/bv-stitches.png",
     colSpan: "md:col-span-4",
     aspectRatio: "aspect-[4/5] md:aspect-auto md:h-[380px]",
     slug: "bv-stitches",
-    link: "https://bvstitches-eight.vercel.app/"
+    link: "https://bvstitches.vercel.app/"
   },
   {
     title: "VEEDA",
     subtitle: "Clinical wellness intelligence with vital-sign monitoring",
-    icon: HeartPulse,
-    gradient: "from-[#1a4430] via-[#0a0a0a] to-[#4E85BF]/30",
+    image: "/veeda.png",
     colSpan: "md:col-span-4",
     aspectRatio: "aspect-[4/5] md:aspect-auto md:h-[380px]",
     slug: "veeda",
@@ -156,12 +151,11 @@ export default function WorksSection() {
                   src={project.image}
                   alt={project.title}
                   className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                  loading="lazy"
                 />
               ) : (
-                <div className={`w-full h-full bg-gradient-to-br ${project.gradient} flex items-center justify-center transition-transform duration-700 ease-out group-hover:scale-105`}>
-                  {project.icon && (
-                    <project.icon className="w-14 h-14 md:w-16 md:h-16 text-text-primary/25" strokeWidth={1} />
-                  )}
+                <div className="w-full h-full bg-surface flex items-center justify-center">
+                  <span className="font-display italic text-2xl text-text-primary/20">{project.title}</span>
                 </div>
               )}
 

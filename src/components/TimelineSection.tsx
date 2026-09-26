@@ -61,7 +61,7 @@ const ITEMS: TimelineItem[] = [
     title: "BV Stitches",
     subtitle: "3D fashion experience",
     description: "Built an immersive 3D fashion and atelier experience focused on product storytelling and modern e-commerce presentation.",
-    link: "https://bvstitches-eight.vercel.app/",
+    link: "https://bvstitches.vercel.app/",
     linkText: "View BV Stitches",
     icon: Shirt
   },

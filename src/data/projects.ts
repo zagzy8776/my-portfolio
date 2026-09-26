@@ -103,8 +103,8 @@ export const PROJECTS_DETAIL: ProjectDetail[] = [
     role: 'Founder · Full-stack · Systems',
     stack: ['React', 'TypeScript', 'Node.js', 'MetaTrader 5', 'WebSockets'],
     liveUrl: 'https://frontend-three-eta-53.vercel.app/',
+    coverImage: '/mt5.png',
     icon: 'trading',
-    gradient: 'from-[#1a2e44] via-[#0a0a0a] to-[#4E85BF]/30',
     problem:
       'Running automated strategies on MetaTrader 5 without a real-time operations surface makes risk, signals, and execution opaque. Operators need a single control room.',
     approach: [
@@ -128,9 +128,9 @@ export const PROJECTS_DETAIL: ProjectDetail[] = [
     year: '2026',
     role: 'Frontend · 3D',
     stack: ['React', 'Three.js', 'React Three Fiber', 'Tailwind'],
-    liveUrl: 'https://bvstitches-eight.vercel.app/',
+    liveUrl: 'https://bvstitches.vercel.app/',
+    coverImage: '/bv-stitches.png',
     icon: 'fashion',
-    gradient: 'from-[#3a1a44] via-[#0a0a0a] to-[#89AACC]/30',
     problem:
       'Fashion brands need digital experiences that go beyond static lookbooks — something that feels like walking into the atelier.',
     approach: [
@@ -155,8 +155,8 @@ export const PROJECTS_DETAIL: ProjectDetail[] = [
     role: 'Founder · Product · Engineering',
     stack: ['React', 'TypeScript', 'Mobile-first', 'Clinical scoring'],
     liveUrl: 'https://veeda-mu.vercel.app/',
+    coverImage: '/veeda.png',
     icon: 'health',
-    gradient: 'from-[#1a4430] via-[#0a0a0a] to-[#4E85BF]/30',
     problem:
       'Clinical teams and individuals need faster, clearer insight from vital signs — without friction or clutter that slows emergency response.',
     approach: [
