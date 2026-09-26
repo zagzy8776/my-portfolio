@@ -1,6 +1,7 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, TrendingUp, Shirt, Search, UtensilsCrossed, HeartPulse } from 'lucide-react'
+import { X, TrendingUp, Shirt, HeartPulse } from 'lucide-react'
 
 interface Project {
   title: string
@@ -11,6 +12,7 @@ interface Project {
   colSpan: string
   aspectRatio: string
   link?: string
+  slug?: string
   isNote?: boolean
   status?: string
 }
@@ -22,6 +24,7 @@ const PROJECTS: Project[] = [
     image: "/realssa.jpg",
     colSpan: "md:col-span-7",
     aspectRatio: "aspect-[16/10] md:aspect-auto md:h-[480px]",
+    slug: "realssa",
     link: "https://realssanews.com.ng"
   },
   {
@@ -30,6 +33,7 @@ const PROJECTS: Project[] = [
     image: "/splendid.jpg",
     colSpan: "md:col-span-5",
     aspectRatio: "aspect-[4/5] md:aspect-auto md:h-[480px]",
+    slug: "splendid-empire",
     link: "https://splendidcosmetics.com.ng"
   },
   {
@@ -38,15 +42,18 @@ const PROJECTS: Project[] = [
     image: "/lashify.jpg",
     colSpan: "md:col-span-5",
     aspectRatio: "aspect-[4/5] md:aspect-auto md:h-[480px]",
+    slug: "tusha-aesthetics",
     link: "https://tushaesthestics.com"
   },
   {
-    title: "mt5bbot",
-    subtitle: "Automated MT5/Exness trading bot with a web dashboard",
+    title: "MT5 Control Room",
+    subtitle: "Algorithmic trading dashboard for MetaTrader 5 — signals, risk, execution",
     icon: TrendingUp,
     gradient: "from-[#1a2e44] via-[#0a0a0a] to-[#4E85BF]/30",
     colSpan: "md:col-span-4",
     aspectRatio: "aspect-[4/5] md:aspect-auto md:h-[380px]",
+    slug: "mt5-control-room",
+    link: "https://frontend-three-eta-53.vercel.app/"
   },
   {
     title: "BV Stitches",
@@ -55,6 +62,8 @@ const PROJECTS: Project[] = [
     gradient: "from-[#3a1a44] via-[#0a0a0a] to-[#89AACC]/30",
     colSpan: "md:col-span-4",
     aspectRatio: "aspect-[4/5] md:aspect-auto md:h-[380px]",
+    slug: "bv-stitches",
+    link: "https://bvstitches-eight.vercel.app/"
   },
   {
     title: "VEEDA",
@@ -63,23 +72,8 @@ const PROJECTS: Project[] = [
     gradient: "from-[#1a4430] via-[#0a0a0a] to-[#4E85BF]/30",
     colSpan: "md:col-span-4",
     aspectRatio: "aspect-[4/5] md:aspect-auto md:h-[380px]",
-  },
-  {
-    title: "Sister's Kitchen Store",
-    subtitle: "Standalone storefront for premium kitchen utensils",
-    icon: UtensilsCrossed,
-    gradient: "from-[#442a1a] via-[#0a0a0a] to-[#89AACC]/30",
-    colSpan: "md:col-span-6",
-    aspectRatio: "aspect-[16/10] md:aspect-auto md:h-[380px]",
-  },
-  {
-    title: "Instant SEO",
-    subtitle: "Connect your site & accounts for an instant SEO boost",
-    icon: Search,
-    gradient: "from-[#0a2a44] via-[#0a0a0a] to-[#4E85BF]/30",
-    colSpan: "md:col-span-6",
-    aspectRatio: "aspect-[16/10] md:aspect-auto md:h-[380px]",
-    status: "In progress"
+    slug: "veeda",
+    link: "https://veeda-mu.vercel.app/"
   },
   {
     title: "Vura Tech Hub",
@@ -93,6 +87,7 @@ const PROJECTS: Project[] = [
 
 export default function WorksSection() {
   const [isNoteOpen, setIsNoteOpen] = useState(false)
+  const navigate = useNavigate()
 
   const scrollToExperience = () => {
     const el = document.getElementById('experience')
@@ -148,6 +143,8 @@ export default function WorksSection() {
               onClick={() => {
                 if (project.isNote) {
                   setIsNoteOpen(true)
+                } else if (project.slug) {
+                  navigate(`/work/${project.slug}`)
                 } else if (project.link) {
                   window.open(project.link, '_blank', 'noopener,noreferrer')
                 }
@@ -190,11 +187,11 @@ export default function WorksSection() {
                   <p className="text-xs text-text-primary/60 tracking-wider">
                     {project.subtitle}
                   </p>
-                  {(project.link || project.isNote) && (
+                  {(project.slug || project.link || project.isNote) && (
                     <div className="relative inline-flex rounded-full p-[1.5px] shadow-lg shadow-black/20 transform scale-90 group-hover:scale-100 transition-transform duration-500">
                       <div className="absolute inset-0 rounded-full accent-gradient" />
                       <div className="relative px-5 py-2.5 bg-white text-bg rounded-full text-xs font-semibold flex items-center gap-1.5">
-                        <span>{project.isNote ? 'Read' : 'View'} — </span>
+                        <span>{project.isNote ? 'Read' : project.slug ? 'Case study' : 'View'} — </span>
                         <span className="font-display italic font-bold">
                           {project.title}
                         </span>
@@ -266,10 +263,11 @@ export default function WorksSection() {
                   </h4>
                   <ul className="list-disc pl-5 space-y-2 text-xs sm:text-sm">
                     <li><strong className="text-text-primary font-medium">Vura</strong> — Multi-bank aggregator for unified financial management.</li>
+                    <li><strong className="text-text-primary font-medium">MT5 Control Room</strong> — Algorithmic trading dashboard for MetaTrader 5.</li>
                     <li><strong className="text-text-primary font-medium">Realssa News</strong> — Automated news aggregation and delivery platform.</li>
                     <li><strong className="text-text-primary font-medium">VEEDA</strong> — Clinical wellness intelligence with vital-sign monitoring.</li>
+                    <li><strong className="text-text-primary font-medium">BV Stitches</strong> — Immersive 3D fashion & atelier experience.</li>
                     <li><strong className="text-text-primary font-medium">Loyal Edge</strong> — Sports telemetry and analytics.</li>
-                    <li><strong className="text-text-primary font-medium">Dream Team Legacy</strong> — Real-estate marketing platform.</li>
                   </ul>
                 </div>
               </div>

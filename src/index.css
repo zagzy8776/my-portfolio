@@ -2,7 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
+:root,
+.dark {
   --bg: 0 0% 4%;
   --surface: 0 0% 8%;
   --text: 0 0% 96%;
@@ -11,16 +12,25 @@
   --accent: 0 0% 96%;
 }
 
+.light {
+  --bg: 0 0% 98%;
+  --surface: 0 0% 100%;
+  --text: 0 0% 8%;
+  --muted: 0 0% 40%;
+  --stroke: 0 0% 90%;
+  --accent: 0 0% 8%;
+}
+
 body {
   margin: 0;
   padding: 0;
   background-color: hsl(var(--bg));
   color: hsl(var(--text));
   font-family: 'Inter', sans-serif;
-  overflow-x: hidden;
+  overflow-x-hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Custom CSS Utility Classes */
 .accent-gradient {
   background: linear-gradient(90deg, #89AACC 0%, #4E85BF 100%);
 }
@@ -31,34 +41,19 @@ body {
   -webkit-text-fill-color: transparent;
 }
 
-/* Custom Animations */
 @keyframes scroll-down {
-  0% {
-    transform: translateY(-100%);
-  }
-  100% {
-    transform: translateY(200%);
-  }
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(200%); }
 }
 
 @keyframes role-fade-in {
-  0% {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  0% { opacity: 0; transform: translateY(8px); }
+  100% { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes gradient-shift {
-  0%, 100% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
 }
 
 .animate-scroll-down {
@@ -74,7 +69,6 @@ body {
   animation: gradient-shift 6s ease infinite;
 }
 
-/* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -89,8 +83,16 @@ body {
   background: hsl(var(--muted));
 }
 
-/* Halftone radial gradient pattern overlay */
 .halftone-overlay {
   background-image: radial-gradient(circle, #000000 1px, transparent 1px);
   background-size: 4px 4px;
+}
+
+.light .halftone-overlay {
+  background-image: radial-gradient(circle, #00000022 1px, transparent 1px);
+}
+
+/* cmdk selected state */
+[cmdk-item][data-selected='true'] {
+  background: hsl(var(--stroke) / 0.6);
 }

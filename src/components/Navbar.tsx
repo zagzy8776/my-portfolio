@@ -1,18 +1,26 @@
 import { useState, useEffect } from 'react'
+import { useNavigate, useLocation } from 'react-router-dom'
+import ThemeToggle from './ThemeToggle'
 
 const NAV_LINKS = [
   { label: 'Home', id: 'home' },
   { label: 'Work', id: 'work' },
   { label: 'Journal', id: 'journal' },
   { label: 'Experience', id: 'experience' },
+  { label: 'Skills', id: 'skills' },
   { label: 'Contact', id: 'resume' },
 ]
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [activeSection, setActiveSection] = useState('home')
+  const navigate = useNavigate()
+  const location = useLocation()
+  const isHome = location.pathname === '/'
 
   useEffect(() => {
+    if (!isHome) return
+
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 80)
 
@@ -32,13 +40,15 @@ export default function Navbar() {
     window.addEventListener('scroll', handleScroll, { passive: true })
     handleScroll()
     return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+  }, [isHome])
 
   const scrollToSection = (id: string) => {
-    const el = document.getElementById(id)
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' })
+    if (!isHome) {
+      navigate(`/#${id}`)
+      return
     }
+    const el = document.getElementById(id)
+    if (el) el.scrollIntoView({ behavior: 'smooth' })
   }
 
   return (
@@ -48,9 +58,8 @@ export default function Navbar() {
           isScrolled ? 'shadow-lg shadow-black/40' : ''
         }`}
       >
-        {/* Logo */}
         <div
-          onClick={() => scrollToSection('home')}
+          onClick={() => (isHome ? scrollToSection('home') : navigate('/'))}
           className="relative w-9 h-9 rounded-full flex items-center justify-center p-[1.5px] cursor-pointer group/logo transition-transform duration-300 hover:scale-105"
           aria-label="Go to home"
         >
@@ -62,18 +71,16 @@ export default function Navbar() {
           </div>
         </div>
 
-        {/* Divider */}
         <div className="hidden sm:block w-px h-5 bg-stroke mx-2" />
 
-        {/* Nav links */}
         <div className="flex items-center gap-0.5 sm:gap-1">
           {NAV_LINKS.map((link) => {
-            const isActive = activeSection === link.id
+            const isActive = isHome && activeSection === link.id
             return (
               <button
                 key={link.id}
                 onClick={() => scrollToSection(link.id)}
-                className={`text-xs sm:text-sm rounded-full px-2.5 sm:px-3.5 py-1.5 sm:py-2 transition-all duration-300 font-medium ${
+                className={`text-xs sm:text-sm rounded-full px-2 sm:px-3 py-1.5 sm:py-2 transition-all duration-300 font-medium ${
                   isActive
                     ? 'text-text-primary bg-stroke/60'
                     : 'text-muted hover:text-text-primary hover:bg-stroke/40'
@@ -85,19 +92,23 @@ export default function Navbar() {
           })}
         </div>
 
-        {/* Divider */}
         <div className="w-px h-5 bg-stroke mx-2" />
 
-        {/* Contact CTA */}
-        <a
-          href="mailto:amadiisdore92@gmail.com"
-          className="relative text-xs sm:text-sm rounded-full px-3 sm:px-4 py-1.5 sm:py-2 transition-all duration-300 font-medium group/sayhi overflow-visible block"
-        >
-          <span className="absolute inset-[-1.5px] rounded-full accent-gradient opacity-0 group-hover/sayhi:opacity-100 transition-opacity duration-300" />
-          <span className="relative flex items-center gap-1 bg-surface group-hover/sayhi:bg-surface/90 text-text-primary px-3 sm:px-4 py-1.5 sm:py-2 rounded-full transition-colors duration-300">
-            Say hi <span className="inline-block transition-transform duration-300 group-hover/sayhi:translate-x-0.5 group-hover/sayhi:-translate-y-0.5">↗</span>
-          </span>
-        </a>
+        <div className="flex items-center gap-1.5">
+          <ThemeToggle compact />
+          <a
+            href="mailto:amadiisdore92@gmail.com"
+            className="relative text-xs sm:text-sm rounded-full px-3 sm:px-4 py-1.5 sm:py-2 transition-all duration-300 font-medium group/sayhi overflow-visible block"
+          >
+            <span className="absolute inset-[-1.5px] rounded-full accent-gradient opacity-0 group-hover/sayhi:opacity-100 transition-opacity duration-300" />
+            <span className="relative flex items-center gap-1 bg-surface group-hover/sayhi:bg-surface/90 text-text-primary px-3 sm:px-4 py-1.5 sm:py-2 rounded-full transition-colors duration-300">
+              Say hi{' '}
+              <span className="inline-block transition-transform duration-300 group-hover/sayhi:translate-x-0.5 group-hover/sayhi:-translate-y-0.5">
+                ↗
+              </span>
+            </span>
+          </a>
+        </div>
       </div>
     </nav>
   )

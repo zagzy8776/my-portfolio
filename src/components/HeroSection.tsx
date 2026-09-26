@@ -36,6 +36,8 @@ export default function HeroSection() {
     return () => ctx.revert()
   }, [])
 
+  const magneticRef = useMagnetic<HTMLButtonElement>({ strength: 0.28, radius: 100 })
+
   const scrollToWork = () => {
     const workSection = document.getElementById('work')
     if (workSection) {
@@ -92,8 +94,9 @@ export default function HeroSection() {
         {/* CTA Buttons */}
         <div className="blur-in inline-flex items-center gap-3 sm:gap-4">
           <button 
+            ref={magneticRef}
             onClick={scrollToWork}
-            className="relative rounded-full p-[1.5px] hover:scale-[1.03] transition-transform duration-300 group/btn"
+            className="relative rounded-full p-[1.5px] hover:scale-[1.03] transition-transform duration-300 group/btn will-change-transform"
           >
             <div className="absolute inset-0 rounded-full bg-transparent group-hover/btn:accent-gradient transition-all duration-300" />
             <div className="relative px-6 sm:px-7 py-3 sm:py-3.5 bg-text-primary text-bg group-hover/btn:bg-bg group-hover/btn:text-text-primary rounded-full text-sm font-semibold transition-all duration-300">

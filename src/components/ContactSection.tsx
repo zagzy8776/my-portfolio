@@ -83,22 +83,55 @@ export default function ContactSection() {
     return Object.keys(tempErrors).length === 0
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!validate()) return
 
     setIsSubmitting(true)
-    
-    // Simulated submission — replace with real endpoint when ready
-    setTimeout(() => {
-      setIsSubmitting(false)
+
+    try {
+      // Web3Forms free endpoint — replace access_key with your key from https://web3forms.com
+      // Or set VITE_FORM_ACCESS_KEY in .env
+      const accessKey = import.meta.env.VITE_FORM_ACCESS_KEY || 'YOUR_WEB3FORMS_ACCESS_KEY'
+
+      const res = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({
+          access_key: accessKey,
+          name: formData.name,
+          email: formData.email,
+          subject: formData.subject,
+          message: formData.message,
+          from_name: 'Portfolio Contact',
+        }),
+      })
+
+      const data = await res.json()
+
+      if (data.success) {
+        setIsSuccess(true)
+        setFormData({ name: '', email: '', subject: '', message: '' })
+        setTimeout(() => setIsSuccess(false), 4500)
+      } else {
+        // Fallback: open mailto so the form never feels dead
+        const mailto = `mailto:amadiisdore92@gmail.com?subject=${encodeURIComponent(formData.subject)}&body=${encodeURIComponent(
+          `From: ${formData.name} <${formData.email}>\n\n${formData.message}`
+        )}`
+        window.location.href = mailto
+        setIsSuccess(true)
+        setTimeout(() => setIsSuccess(false), 4500)
+      }
+    } catch {
+      const mailto = `mailto:amadiisdore92@gmail.com?subject=${encodeURIComponent(formData.subject)}&body=${encodeURIComponent(
+        `From: ${formData.name} <${formData.email}>\n\n${formData.message}`
+      )}`
+      window.location.href = mailto
       setIsSuccess(true)
-      setFormData({ name: '', email: '', subject: '', message: '' })
-      
-      setTimeout(() => {
-        setIsSuccess(false)
-      }, 4500)
-    }, 1400)
+      setTimeout(() => setIsSuccess(false), 4500)
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (

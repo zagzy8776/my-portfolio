@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
-import { Landmark, Newspaper, ShieldAlert, Award, Layers } from 'lucide-react'
+import { Landmark, Newspaper, ShieldAlert, Award, Layers, TrendingUp, Shirt } from 'lucide-react'
 
 interface TimelineItem {
   year: string
@@ -30,6 +30,15 @@ const ITEMS: TimelineItem[] = [
     icon: Landmark
   },
   {
+    year: "Trading",
+    title: "MT5 Control Room",
+    subtitle: "Algorithmic trading systems",
+    description: "Designed and shipped a full control-room dashboard for MetaTrader 5 — live signal pipeline, risk engine, position management, and bot execution for Exness accounts.",
+    link: "https://frontend-three-eta-53.vercel.app/",
+    linkText: "View MT5 Control Room",
+    icon: TrendingUp
+  },
+  {
     year: "Media",
     title: "Realssa News",
     subtitle: "News aggregation",
@@ -43,9 +52,18 @@ const ITEMS: TimelineItem[] = [
     title: "VEEDA Clinical Intelligence",
     subtitle: "Mobile wellness platform",
     description: "Engineered a mobile-first clinical platform for vital-sign tracking, NEWS2 scoring, and faster emergency response.",
-    link: "https://veeda-mu.vercel.app",
+    link: "https://veeda-mu.vercel.app/",
     linkText: "View VEEDA",
     icon: ShieldAlert
+  },
+  {
+    year: "Fashion",
+    title: "BV Stitches",
+    subtitle: "3D fashion experience",
+    description: "Built an immersive 3D fashion and atelier experience focused on product storytelling and modern e-commerce presentation.",
+    link: "https://bvstitches-eight.vercel.app/",
+    linkText: "View BV Stitches",
+    icon: Shirt
   },
   {
     year: "Sports",
