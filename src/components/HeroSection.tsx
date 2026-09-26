@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef, lazy, Suspense } from 'react'
 import gsap from 'gsap'
+import { useMagnetic } from '../hooks/useMagnetic'
 
 const Scene3D = lazy(() => import('./Scene3D'))
 
