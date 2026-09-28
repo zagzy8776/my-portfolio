@@ -21,7 +21,6 @@ export default function HeroSection() {
   const containerRef = useRef<HTMLDivElement>(null)
   const stageRef = useRef<HTMLDivElement>(null)
   const plateRef = useRef<HTMLDivElement>(null)
-  const framesRef = useRef<(HTMLImageElement | null)[]>([])
   const magneticRef = useMagnetic<HTMLButtonElement>({ strength: 0.28, radius: 100 })
 
   // Role cycle
@@ -63,12 +62,16 @@ export default function HeroSection() {
     const plate = plateRef.current
     if (!container || !plate) return
 
-    const frames = framesRef.current.filter(Boolean) as HTMLImageElement[]
+    // Query frames from DOM (more reliable than refs array on first paint)
+    const frames = Array.from(
+      container.querySelectorAll<HTMLImageElement>('.portrait-frame')
+    )
     if (frames.length === 0) return
 
-    // Ensure first frame visible, others hidden
-    gsap.set(frames, { opacity: 0 })
+    gsap.set(frames, { opacity: 0, scale: 1 })
     gsap.set(frames[0], { opacity: 1 })
+
+    const triggers: ScrollTrigger[] = []
 
     // Continuous scrub timeline for portrait sequence
     const tl = gsap.timeline({
@@ -76,7 +79,7 @@ export default function HeroSection() {
         trigger: container,
         start: 'top top',
         end: 'bottom top',
-        scrub: 0.55,
+        scrub: 0.6,
         onUpdate: (self) => {
           const idx = Math.min(
             PORTRAITS.length - 1,
@@ -86,33 +89,29 @@ export default function HeroSection() {
         },
       },
     })
+    if (tl.scrollTrigger) triggers.push(tl.scrollTrigger)
 
-    // Crossfade between frames with slight scale/rotate for depth
     frames.forEach((frame, i) => {
       if (i === 0) return
-      const start = (i - 0.85) / (PORTRAITS.length - 0.15)
+      // Evenly space crossfades across the timeline
+      const start = (i - 0.9) / Math.max(PORTRAITS.length - 1, 1)
       tl.fromTo(
         frame,
-        { opacity: 0, scale: 1.05 },
+        { opacity: 0, scale: 1.04 },
         { opacity: 1, scale: 1, duration: 1, ease: 'none' },
         start
       )
-      // Fade previous slightly so crossfade is clean
       if (frames[i - 1]) {
-        tl.to(
-          frames[i - 1],
-          { opacity: 0, duration: 0.85, ease: 'none' },
-          start
-        )
+        tl.to(frames[i - 1], { opacity: 0, duration: 0.9, ease: 'none' }, start)
       }
     })
 
-    // Subtle scroll-driven 3D on the plate (works with mouse tilt)
+    // Scroll-driven 3D values (mutated object read every frame by mouse tick)
     const scroll3d = { rx: 0, ry: 0, scale: 1 }
-    gsap.to(scroll3d, {
-      rx: -5,
-      ry: 7,
-      scale: 0.97,
+    const st3d = gsap.to(scroll3d, {
+      rx: -6,
+      ry: 8,
+      scale: 0.96,
       ease: 'none',
       scrollTrigger: {
         trigger: container,
@@ -121,6 +120,7 @@ export default function HeroSection() {
         scrub: true,
       },
     })
+    if (st3d.scrollTrigger) triggers.push(st3d.scrollTrigger)
 
     // Mouse tilt (composited with scroll 3D)
     let raf = 0
@@ -137,10 +137,10 @@ export default function HeroSection() {
       const rect = container.getBoundingClientRect()
       const x = (e.clientX - rect.left) / rect.width - 0.5
       const y = (e.clientY - rect.top) / rect.height - 0.5
-      targetRY = x * 9
-      targetRX = -y * 6
-      targetTX = x * 14
-      targetTY = y * 10
+      targetRY = x * 10
+      targetRX = -y * 7
+      targetTX = x * 16
+      targetTY = y * 12
     }
 
     const onLeave = () => {
@@ -151,19 +151,19 @@ export default function HeroSection() {
     }
 
     const tick = () => {
-      currentRX += (targetRX - currentRX) * 0.08
-      currentRY += (targetRY - currentRY) * 0.08
-      currentTX += (targetTX - currentTX) * 0.08
-      currentTY += (targetTY - currentTY) * 0.08
+      currentRX += (targetRX - currentRX) * 0.1
+      currentRY += (targetRY - currentRY) * 0.1
+      currentTX += (targetTX - currentTX) * 0.1
+      currentTY += (targetTY - currentTY) * 0.1
 
-      // Combine mouse tilt + scroll-driven 3D
-      plate.style.transform = `
-        perspective(1200px)
-        rotateX(${currentRX + scroll3d.rx}deg)
-        rotateY(${currentRY + scroll3d.ry}deg)
-        scale(${scroll3d.scale})
-        translate3d(${currentTX}px, ${currentTY}px, 0)
-      `
+      plate.style.transform = [
+        'perspective(1200px)',
+        `rotateX(${currentRX + scroll3d.rx}deg)`,
+        `rotateY(${currentRY + scroll3d.ry}deg)`,
+        `scale(${scroll3d.scale})`,
+        `translate3d(${currentTX}px, ${currentTY}px, 0)`,
+      ].join(' ')
+
       raf = requestAnimationFrame(tick)
     }
 
@@ -171,15 +171,23 @@ export default function HeroSection() {
     container.addEventListener('mouseleave', onLeave)
     raf = requestAnimationFrame(tick)
 
+    // Refresh after images load so ScrollTrigger measures correctly
+    const onLoad = () => ScrollTrigger.refresh()
+    frames.forEach((img) => {
+      if (img.complete) return
+      img.addEventListener('load', onLoad, { once: true })
+    })
+    const refreshTimer = setTimeout(() => ScrollTrigger.refresh(), 500)
+
     return () => {
+      clearTimeout(refreshTimer)
       cancelAnimationFrame(raf)
       container.removeEventListener('mousemove', onMove)
       container.removeEventListener('mouseleave', onLeave)
-      tl.scrollTrigger?.kill()
+      frames.forEach((img) => img.removeEventListener('load', onLoad))
       tl.kill()
-      ScrollTrigger.getAll()
-        .filter((st) => st.trigger === container)
-        .forEach((st) => st.kill())
+      st3d.kill()
+      triggers.forEach((t) => t.kill())
     }
   }, [])
 
@@ -187,7 +195,7 @@ export default function HeroSection() {
     const el = document.getElementById('work')
     if (!el) return
     if (window.__lenis) {
-      window.__lenis.scrollTo(el, { offset: 0, duration: 1.2 })
+      window.__lenis.scrollTo(el, { offset: 0, duration: 1.25 })
     } else {
       el.scrollIntoView({ behavior: 'smooth' })
     }
@@ -197,7 +205,7 @@ export default function HeroSection() {
     <section
       id="home"
       ref={containerRef}
-      className="relative w-screen min-h-[160vh] flex items-start overflow-hidden bg-bg px-6 md:px-10 lg:px-16 pt-24"
+      className="relative w-screen min-h-[170vh] flex items-start overflow-hidden bg-bg px-6 md:px-10 lg:px-16 pt-24"
     >
       {/* Sticky viewport so portrait sequence plays while user scrolls */}
       <div className="sticky top-0 h-screen w-full flex items-center">
@@ -291,13 +299,9 @@ export default function HeroSection() {
                 className="relative w-full h-full rounded-[28px] overflow-hidden border border-white/10 bg-surface shadow-2xl shadow-black/40 will-change-transform"
                 style={{ transformStyle: 'preserve-3d' }}
               >
-                {/* Stacked frames — GSAP drives opacity continuously */}
                 {PORTRAITS.map((src, i) => (
                   <img
                     key={src}
-                    ref={(el) => {
-                      framesRef.current[i] = el
-                    }}
                     src={src}
                     alt=""
                     aria-hidden={i !== frameIndex}
