@@ -48,7 +48,12 @@ export default function Navbar() {
       return
     }
     const el = document.getElementById(id)
-    if (el) el.scrollIntoView({ behavior: 'smooth' })
+    if (!el) return
+    if (window.__lenis) {
+      window.__lenis.scrollTo(el, { offset: -20, duration: 1.15 })
+    } else {
+      el.scrollIntoView({ behavior: 'smooth' })
+    }
   }
 
   return (

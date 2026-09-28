@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import { HelmetProvider } from 'react-helmet-async'
 import LoadingScreen from './components/LoadingScreen'
 import CommandPalette from './components/CommandPalette'
+import SmoothScroll from './components/SmoothScroll'
 import Index from './pages/Index'
 import CaseStudy from './pages/work/CaseStudy'
 import { useTheme } from './hooks/useTheme'
@@ -13,10 +14,20 @@ function ScrollToTop() {
     if (hash) {
       const id = hash.replace('#', '')
       setTimeout(() => {
-        document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
+        const el = document.getElementById(id)
+        if (!el) return
+        if (window.__lenis) {
+          window.__lenis.scrollTo(el, { offset: 0, duration: 1.1 })
+        } else {
+          el.scrollIntoView({ behavior: 'smooth' })
+        }
       }, 80)
     } else {
-      window.scrollTo(0, 0)
+      if (window.__lenis) {
+        window.__lenis.scrollTo(0, { immediate: true })
+      } else {
+        window.scrollTo(0, 0)
+      }
     }
   }, [pathname, hash])
   return null
@@ -31,7 +42,7 @@ function AppShell() {
       {isLoading ? (
         <LoadingScreen onComplete={() => setIsLoading(false)} />
       ) : (
-        <>
+        <SmoothScroll>
           <ScrollToTop />
           <CommandPalette />
           <Routes>
@@ -39,7 +50,7 @@ function AppShell() {
             <Route path="/work/:slug" element={<CaseStudy />} />
             <Route path="*" element={<Index />} />
           </Routes>
-        </>
+        </SmoothScroll>
       )}
     </div>
   )

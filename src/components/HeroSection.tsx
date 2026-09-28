@@ -1,6 +1,9 @@
 import { useEffect, useState, useRef } from 'react'
 import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useMagnetic } from '../hooks/useMagnetic'
+
+gsap.registerPlugin(ScrollTrigger)
 
 const ROLES = ['Creative', 'Fullstack', 'Founder', 'Scholar']
 
@@ -18,6 +21,7 @@ export default function HeroSection() {
   const containerRef = useRef<HTMLDivElement>(null)
   const stageRef = useRef<HTMLDivElement>(null)
   const plateRef = useRef<HTMLDivElement>(null)
+  const framesRef = useRef<(HTMLImageElement | null)[]>([])
   const magneticRef = useMagnetic<HTMLButtonElement>({ strength: 0.28, radius: 100 })
 
   // Role cycle
@@ -53,12 +57,72 @@ export default function HeroSection() {
     return () => ctx.revert()
   }, [])
 
-  // Scroll-scrub frames + mouse tilt on active plate
+  // Scroll-scrubbed frames + 3D plate + mouse tilt
   useEffect(() => {
     const container = containerRef.current
     const plate = plateRef.current
     if (!container || !plate) return
 
+    const frames = framesRef.current.filter(Boolean) as HTMLImageElement[]
+    if (frames.length === 0) return
+
+    // Ensure first frame visible, others hidden
+    gsap.set(frames, { opacity: 0 })
+    gsap.set(frames[0], { opacity: 1 })
+
+    // Continuous scrub timeline for portrait sequence
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: container,
+        start: 'top top',
+        end: 'bottom top',
+        scrub: 0.55,
+        onUpdate: (self) => {
+          const idx = Math.min(
+            PORTRAITS.length - 1,
+            Math.floor(self.progress * PORTRAITS.length)
+          )
+          setFrameIndex(idx)
+        },
+      },
+    })
+
+    // Crossfade between frames with slight scale/rotate for depth
+    frames.forEach((frame, i) => {
+      if (i === 0) return
+      const start = (i - 0.85) / (PORTRAITS.length - 0.15)
+      tl.fromTo(
+        frame,
+        { opacity: 0, scale: 1.05 },
+        { opacity: 1, scale: 1, duration: 1, ease: 'none' },
+        start
+      )
+      // Fade previous slightly so crossfade is clean
+      if (frames[i - 1]) {
+        tl.to(
+          frames[i - 1],
+          { opacity: 0, duration: 0.85, ease: 'none' },
+          start
+        )
+      }
+    })
+
+    // Subtle scroll-driven 3D on the plate (works with mouse tilt)
+    const scroll3d = { rx: 0, ry: 0, scale: 1 }
+    gsap.to(scroll3d, {
+      rx: -5,
+      ry: 7,
+      scale: 0.97,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: container,
+        start: 'top top',
+        end: 'bottom top',
+        scrub: true,
+      },
+    })
+
+    // Mouse tilt (composited with scroll 3D)
     let raf = 0
     let targetRX = 0
     let targetRY = 0
@@ -68,17 +132,6 @@ export default function HeroSection() {
     let targetTY = 0
     let currentTX = 0
     let currentTY = 0
-
-    const updateFrameFromScroll = () => {
-      const rect = container.getBoundingClientRect()
-      // Progress while hero is in view: 0 at top, 1 as user scrolls through hero height
-      const visible = Math.min(Math.max(-rect.top / (rect.height * 0.65), 0), 1)
-      const idx = Math.min(
-        PORTRAITS.length - 1,
-        Math.floor(visible * PORTRAITS.length)
-      )
-      setFrameIndex(idx)
-    }
 
     const onMove = (e: MouseEvent) => {
       const rect = container.getBoundingClientRect()
@@ -103,38 +156,48 @@ export default function HeroSection() {
       currentTX += (targetTX - currentTX) * 0.08
       currentTY += (targetTY - currentTY) * 0.08
 
+      // Combine mouse tilt + scroll-driven 3D
       plate.style.transform = `
         perspective(1200px)
-        rotateX(${currentRX}deg)
-        rotateY(${currentRY}deg)
+        rotateX(${currentRX + scroll3d.rx}deg)
+        rotateY(${currentRY + scroll3d.ry}deg)
+        scale(${scroll3d.scale})
         translate3d(${currentTX}px, ${currentTY}px, 0)
       `
       raf = requestAnimationFrame(tick)
     }
 
-    updateFrameFromScroll()
-    window.addEventListener('scroll', updateFrameFromScroll, { passive: true })
     container.addEventListener('mousemove', onMove)
     container.addEventListener('mouseleave', onLeave)
     raf = requestAnimationFrame(tick)
 
     return () => {
       cancelAnimationFrame(raf)
-      window.removeEventListener('scroll', updateFrameFromScroll)
       container.removeEventListener('mousemove', onMove)
       container.removeEventListener('mouseleave', onLeave)
+      tl.scrollTrigger?.kill()
+      tl.kill()
+      ScrollTrigger.getAll()
+        .filter((st) => st.trigger === container)
+        .forEach((st) => st.kill())
     }
   }, [])
 
   const scrollToWork = () => {
-    document.getElementById('work')?.scrollIntoView({ behavior: 'smooth' })
+    const el = document.getElementById('work')
+    if (!el) return
+    if (window.__lenis) {
+      window.__lenis.scrollTo(el, { offset: 0, duration: 1.2 })
+    } else {
+      el.scrollIntoView({ behavior: 'smooth' })
+    }
   }
 
   return (
     <section
       id="home"
       ref={containerRef}
-      className="relative w-screen min-h-[140vh] flex items-start overflow-hidden bg-bg px-6 md:px-10 lg:px-16 pt-24"
+      className="relative w-screen min-h-[160vh] flex items-start overflow-hidden bg-bg px-6 md:px-10 lg:px-16 pt-24"
     >
       {/* Sticky viewport so portrait sequence plays while user scrolls */}
       <div className="sticky top-0 h-screen w-full flex items-center">
@@ -228,26 +291,29 @@ export default function HeroSection() {
                 className="relative w-full h-full rounded-[28px] overflow-hidden border border-white/10 bg-surface shadow-2xl shadow-black/40 will-change-transform"
                 style={{ transformStyle: 'preserve-3d' }}
               >
-                {/* Stacked frames — active fades in */}
+                {/* Stacked frames — GSAP drives opacity continuously */}
                 {PORTRAITS.map((src, i) => (
                   <img
                     key={src}
+                    ref={(el) => {
+                      framesRef.current[i] = el
+                    }}
                     src={src}
                     alt=""
                     aria-hidden={i !== frameIndex}
-                    className="absolute inset-0 w-full h-full object-cover object-top transition-opacity duration-500 ease-out"
+                    className="portrait-frame absolute inset-0 w-full h-full object-cover object-top"
                     style={{
-                      opacity: i === frameIndex ? 1 : 0,
-                      zIndex: i === frameIndex ? 2 : 1,
+                      opacity: i === 0 ? 1 : 0,
+                      zIndex: i + 1,
                     }}
                     draggable={false}
                   />
                 ))}
 
-                <div className="absolute inset-0 z-[3] bg-gradient-to-t from-bg/90 via-bg/10 to-transparent pointer-events-none" />
-                <div className="absolute inset-0 z-[3] bg-gradient-to-r from-bg/25 via-transparent to-transparent pointer-events-none" />
+                <div className="absolute inset-0 z-[10] bg-gradient-to-t from-bg/90 via-bg/10 to-transparent pointer-events-none" />
+                <div className="absolute inset-0 z-[10] bg-gradient-to-r from-bg/25 via-transparent to-transparent pointer-events-none" />
 
-                <div className="absolute bottom-0 left-0 right-0 z-[4] p-5 md:p-6 pointer-events-none">
+                <div className="absolute bottom-0 left-0 right-0 z-[11] p-5 md:p-6 pointer-events-none">
                   <p className="text-[10px] uppercase tracking-[0.22em] text-muted mb-1">
                     Founder
                   </p>
