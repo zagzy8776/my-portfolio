@@ -58,7 +58,7 @@ export default function ContactSection() {
     return () => ctx.revert()
   }, [])
 
-  const marqueeText = Array(8).fill("BUILDING THE FUTURE · ").join("")
+  const marqueeText = Array(8).fill("VURA TECH HUB  ").join("")
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -339,13 +339,9 @@ export default function ContactSection() {
             </a>
           </div>
 
-          <div className="flex items-center gap-2.5 text-xs text-muted font-medium select-none">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-            </span>
-            <span>Open to new projects</span>
-          </div>
+          <p className="text-xs text-muted font-medium select-none">
+            Available for new work
+          </p>
         </div>
 
         <div className="w-full text-center mt-8 text-[10px] text-muted/40 font-mono tracking-wide">
