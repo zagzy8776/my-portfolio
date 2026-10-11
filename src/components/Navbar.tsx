@@ -23,20 +23,29 @@ export default function Navbar() {
   useEffect(() => {
     if (!isHome) return
 
+    let ticking = false
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 80)
+      // Coalesce rapid scroll events into one state update per frame —
+      // without this the navbar re-renders on every pixel scrolled,
+      // which visibly stutters low-end phones.
+      if (ticking) return
+      ticking = true
+      requestAnimationFrame(() => {
+        ticking = false
+        setIsScrolled(window.scrollY > 80)
 
-      const sections = NAV_LINKS.map((l) => l.id)
-      for (const section of sections) {
-        const el = document.getElementById(section)
-        if (el) {
-          const rect = el.getBoundingClientRect()
-          if (rect.top <= 140 && rect.bottom >= 140) {
-            setActiveSection(section)
-            break
+        const sections = NAV_LINKS.map((l) => l.id)
+        for (const section of sections) {
+          const el = document.getElementById(section)
+          if (el) {
+            const rect = el.getBoundingClientRect()
+            if (rect.top <= 140 && rect.bottom >= 140) {
+              setActiveSection(section)
+              break
+            }
           }
         }
-      }
+      })
     }
 
     window.addEventListener('scroll', handleScroll, { passive: true })

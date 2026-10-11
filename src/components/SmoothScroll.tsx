@@ -19,11 +19,22 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     if (prefersReduced) return
 
+    // ── Mobile: never hijack touch scrolling ──────────────────────────
+    // Lenis emulates momentum by intercepting touchmove and driving scroll
+    // from a rAF loop. On phones that fights the browser's native,
+    // GPU-composited fling scrolling and feels laggy/janky. Native scroll
+    // on touch devices is always smoother, so skip Lenis entirely there.
+    // Desktop keeps the buttery wheel smoothing.
+    const isTouchDevice =
+      window.matchMedia('(hover: none), (pointer: coarse)').matches ||
+      'ontouchstart' in window ||
+      navigator.maxTouchPoints > 0
+    if (isTouchDevice) return
+
     const lenis = new Lenis({
-      duration: 1.2,
+      duration: 1.1,
       easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
-      touchMultiplier: 1.5,
       wheelMultiplier: 1,
       autoRaf: false,
     })

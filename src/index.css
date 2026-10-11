@@ -111,7 +111,7 @@ body {
   background: hsl(var(--stroke) / 0.6);
 }
 
-/* ─── Lenis smooth scroll ─── */
+/* ─── Lenis smooth scroll (desktop wheel only — touch uses native) ─── */
 html.lenis,
 html.lenis body {
   height: auto;
@@ -127,4 +127,34 @@ html.lenis body {
 }
 .lenis.lenis-smooth iframe {
   pointer-events: none;
+}
+
+/* ─── Mobile scroll performance ─── */
+@media (hover: none), (pointer: coarse) {
+  /* Native momentum fling; never let Lenis classes fight it */
+  html {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: auto;
+  }
+
+  /* Long scroll-linked sections: paint-contain each card so the
+     compositor doesn't repaint the whole page while flinging */
+  #work article,
+  #journal article,
+  #experience > div > div > div {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 320px;
+  }
+
+  /* backdrop-blur over a scrolling page is one of the most expensive
+     things a mobile GPU can do — soften it on touch devices */
+  nav .backdrop-blur-md {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  /* Long shadows force large offscreen raster buffers; flatten on mobile */
+  .shadow-2xl {
+    box-shadow: 0 8px 24px -12px rgb(0 0 0 / 0.4);
+  }
 }

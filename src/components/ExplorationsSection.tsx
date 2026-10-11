@@ -16,7 +16,25 @@ export default function ExplorationsSection() {
 
   const close = useCallback(() => setActive(null), [])
 
+  const [isTouch, setIsTouch] = useState(false)
   useEffect(() => {
+    setIsTouch(
+      window.matchMedia('(hover: none), (pointer: coarse)').matches ||
+        'ontouchstart' in window ||
+        navigator.maxTouchPoints > 0
+    )
+  }, [])
+
+  useEffect(() => {
+    // Pinned + scrubbed parallax is heavy on mobile GPUs and fights native
+    // fling scrolling — keep it desktop-only. On touch devices the columns
+    // render statically (see `isTouch` below) so no ScrollTriggers needed.
+    const isTouchDevice =
+      window.matchMedia('(hover: none), (pointer: coarse)').matches ||
+      'ontouchstart' in window ||
+      navigator.maxTouchPoints > 0
+    if (isTouchDevice) return
+
     const ctx = gsap.context(() => {
       ScrollTrigger.create({
         trigger: sectionRef.current,
@@ -85,12 +103,51 @@ export default function ExplorationsSection() {
   }, [active, close])
 
   return (
-    <section 
-      ref={sectionRef} 
-      className="relative w-screen min-h-[300vh] bg-bg overflow-visible"
+    <section
+      ref={sectionRef}
+      className={`relative w-screen bg-bg overflow-visible ${
+        isTouch ? 'min-h-0 py-20' : 'min-h-[300vh]'
+      }`}
     >
-      <div 
-        ref={pinRef} 
+      {isTouch ? (
+        /* ── Touch: simple static stack, zero scroll-linked work ── */
+        <div className="relative z-10 w-full flex flex-col items-center gap-8 px-6">
+          <div className="text-center space-y-4 max-w-lg">
+            <span className="text-xs text-muted uppercase tracking-[0.25em] font-medium block">
+              Explorations
+            </span>
+            <h2 className="text-4xl font-light tracking-tight text-text-primary leading-tight">
+              Visual <span className="font-display italic text-text-primary/95">playground</span>
+            </h2>
+            <p className="text-sm text-muted max-w-sm mx-auto leading-relaxed">
+              A collection of visual experiments, renders, and design studies.
+            </p>
+          </div>
+          <div className="w-full max-w-md flex flex-col gap-5">
+            {EXPLORATION_ITEMS.map((item) => (
+              <button
+                key={item.title}
+                onClick={() => setActive(item)}
+                className="relative w-full aspect-[4/3] bg-surface border border-stroke rounded-3xl overflow-hidden cursor-pointer shadow-xl shadow-black/20 active:scale-[0.98] transition-transform duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-text-primary/60"
+              >
+                <PlaygroundCard
+                  src={item.image}
+                  alt={item.title}
+                  width={item.imageWidth}
+                  height={item.imageHeight}
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-4 pointer-events-none">
+                  <span className="text-xs text-text-primary/95 font-medium">{item.title}</span>
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+      ) : (
+      <>
+      <div
+        ref={pinRef}
         className="absolute inset-0 w-full h-screen flex flex-col justify-center items-center z-10 pointer-events-none"
       >
         <div className="text-center space-y-5 max-w-lg px-6 pointer-events-auto">
@@ -213,6 +270,8 @@ export default function ExplorationsSection() {
           </motion.div>
         )}
       </AnimatePresence>
+      </>
+      )}
     </section>
   )
 }
