@@ -111,6 +111,77 @@ body {
   background: hsl(var(--stroke) / 0.6);
 }
 
+/* ─── Cinematic video wallpaper (hero wall) ─── */
+.video-wall {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background: hsl(var(--bg));
+}
+
+.video-wall-media {
+  position: absolute;
+  inset: -6%;
+  width: 112%;
+  height: 112%;
+  object-fit: cover;
+  object-position: center 30%;
+  /* Invisible loop: 8s Ken Burns drift synced to the 8s clip */
+  animation: wall-drift 8s ease-in-out infinite alternate;
+  will-change: transform;
+  /* Blend luminance into the theme so dark/light both read as one grade */
+  filter: saturate(0.82) contrast(1.04) brightness(0.9);
+}
+
+.light .video-wall-media {
+  filter: saturate(0.7) contrast(0.96) brightness(1.06);
+  opacity: 0.5;
+}
+
+.dark .video-wall-media {
+  opacity: 0.62;
+}
+
+@keyframes wall-drift {
+  from {
+    transform: scale(1.02) translate3d(0, 0, 0);
+  }
+  to {
+    transform: scale(1.1) translate3d(0, -1.5%, 0);
+  }
+}
+
+/* Theme-reactive grade wash */
+.video-wall-grade {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(120% 90% at 50% 10%, transparent 40%, hsl(var(--bg) / 0.55) 100%),
+    linear-gradient(180deg, hsl(var(--bg) / 0.55) 0%, hsl(var(--bg) / 0.25) 35%, hsl(var(--bg) / 0.35) 65%, hsl(var(--bg)) 100%);
+}
+
+/* Readability scrim — text side stays legible over bright frames */
+.video-wall-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, hsl(var(--bg) / 0.72) 0%, hsl(var(--bg) / 0.45) 38%, transparent 68%);
+}
+
+@media (max-width: 1024px) {
+  .video-wall-scrim {
+    background: linear-gradient(180deg, hsl(var(--bg) / 0.6) 0%, hsl(var(--bg) / 0.35) 40%, hsl(var(--bg) / 0.55) 100%);
+  }
+}
+
+/* Battery + motion safety */
+@media (prefers-reduced-motion: reduce) {
+  .video-wall-media {
+    animation: none;
+  }
+}
+
 /* ─── Lenis smooth scroll (desktop wheel only — touch uses native) ─── */
 html.lenis,
 html.lenis body {

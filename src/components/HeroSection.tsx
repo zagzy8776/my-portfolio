@@ -1,6 +1,9 @@
 import { useEffect, useState, useRef } from 'react'
 import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useMagnetic } from '../hooks/useMagnetic'
+
+gsap.registerPlugin(ScrollTrigger)
 
 const ROLES = ['Creative', 'Fullstack', 'Founder', 'Scholar']
 
@@ -16,6 +19,7 @@ export default function HeroSection() {
   const [frameIndex, setFrameIndex] = useState(0)
   const containerRef = useRef<HTMLDivElement>(null)
   const plateRef = useRef<HTMLDivElement>(null)
+  const copyRef = useRef<HTMLDivElement>(null)
   const magneticRef = useMagnetic<HTMLButtonElement>({ strength: 0.28, radius: 100 })
 
   useEffect(() => {

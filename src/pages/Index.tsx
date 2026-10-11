@@ -1,4 +1,5 @@
 import Navbar from '../components/Navbar'
+import VideoWallpaper from '../components/VideoWallpaper'
 import HeroSection from '../components/HeroSection'
 import WorksSection from '../components/WorksSection'
 import JournalSection from '../components/JournalSection'
@@ -13,6 +14,7 @@ export default function Index() {
   return (
     <>
       <SEO />
+      <VideoWallpaper />
       <Navbar />
       <main className="relative z-10 w-full overflow-x-hidden">
         <HeroSection />
