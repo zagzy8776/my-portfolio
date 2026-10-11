@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Zagzy Link — Journal</title>
+    <link>https://portfolios-ruby-alpha.vercel.app/journal</link>
+    <description>Essays on interface craft, design systems, performance, and building products for real bandwidth.</description>
+    <language>en</language>
+    <lastBuildDate>Wed, 12 Aug 2026 00:00:00 GMT</lastBuildDate>
+    <atom:link href="https://portfolios-ruby-alpha.vercel.app/rss.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>The Subtle Art of Micro-interactions in Modern Web Design</title>
+      <link>https://portfolios-ruby-alpha.vercel.app/journal/micro-interactions</link>
+      <guid isPermaLink="true">https://portfolios-ruby-alpha.vercel.app/journal/micro-interactions</guid>
+      <pubDate>Wed, 12 Aug 2026 00:00:00 GMT</pubDate>
+      <description>Micro-interactions are the smallest unit of product craft. Here is how I decide which ones earn their place — and which are just decoration.</description>
+      <enclosure url="https://portfolios-ruby-alpha.vercel.app/journal/micro-interactions.jpg" type="image/jpeg" />
+      <category>Design</category>
+      <category>UX</category>
+    </item>
+    <item>
+      <title>Why Minimalist Architecture Inspires Clean User Interfaces</title>
+      <link>https://portfolios-ruby-alpha.vercel.app/journal/minimalist-architecture</link>
+      <guid isPermaLink="true">https://portfolios-ruby-alpha.vercel.app/journal/minimalist-architecture</guid>
+      <pubDate>Tue, 28 Jul 2026 00:00:00 GMT</pubDate>
+      <description>Structural minimalism is a transferable discipline: load-bearing lines exposed, emptiness treated as an active material, ornament removed until only intent remains.</description>
+      <enclosure url="https://portfolios-ruby-alpha.vercel.app/journal/minimalist-architecture.jpg" type="image/jpeg" />
+      <category>Design</category>
+      <category>Systems</category>
+    </item>
+    <item>
+      <title>Structuring Design Systems for Long-term Scalability</title>
+      <link>https://portfolios-ruby-alpha.vercel.app/journal/design-systems</link>
+      <guid isPermaLink="true">https://portfolios-ruby-alpha.vercel.app/journal/design-systems</guid>
+      <pubDate>Mon, 15 Jun 2026 00:00:00 GMT</pubDate>
+      <description>A design system is a repository, not a Figma file. Tokens are the atomic layer that keeps ten platforms consistent for years instead of weeks.</description>
+      <enclosure url="https://portfolios-ruby-alpha.vercel.app/journal/design-systems.jpg" type="image/jpeg" />
+      <category>Engineering</category>
+      <category>Design Systems</category>
+    </item>
+    <item>
+      <title>Balancing Form, Function, and Brand Narrative</title>
+      <link>https://portfolios-ruby-alpha.vercel.app/journal/form-function-brand</link>
+      <guid isPermaLink="true">https://portfolios-ruby-alpha.vercel.app/journal/form-function-brand</guid>
+      <pubDate>Mon, 04 May 2026 00:00:00 GMT</pubDate>
+      <description>Beautiful and broken, or fast and forgettable — both are failures. The craft is in the synthesis, and the synthesis is an engineering decision as much as a design one.</description>
+      <enclosure url="https://portfolios-ruby-alpha.vercel.app/journal/form-function-brand.jpg" type="image/jpeg" />
+      <category>Product</category>
+      <category>Brand</category>
+      <category>Engineering</category>
+    </item>
+    <item>
+      <title>Writing for the Web: Editing Is the Design</title>
+      <link>https://portfolios-ruby-alpha.vercel.app/journal/writing-for-the-web</link>
+      <guid isPermaLink="true">https://portfolios-ruby-alpha.vercel.app/journal/writing-for-the-web</guid>
+      <pubDate>Thu, 02 Apr 2026 00:00:00 GMT</pubDate>
+      <description>Interface copy is the interface. Most layout problems I have been handed turned out to be editing problems wearing a layout costume.</description>
+      <enclosure url="https://portfolios-ruby-alpha.vercel.app/journal/writing-for-the-web.jpg" type="image/jpeg" />
+      <category>Writing</category>
+      <category>Design</category>
+      <category>Product</category>
+    </item>
+    <item>
+      <title>Interface Performance Is a Design Decision</title>
+      <link>https://portfolios-ruby-alpha.vercel.app/journal/interface-performance-as-craft</link>
+      <guid isPermaLink="true">https://portfolios-ruby-alpha.vercel.app/journal/interface-performance-as-craft</guid>
+      <pubDate>Wed, 11 Mar 2026 00:00:00 GMT</pubDate>
+      <description>Every interaction that ships commits to a render budget. Decide the budget in the design phase, or the browser will decide it for you.</description>
+      <enclosure url="https://portfolios-ruby-alpha.vercel.app/journal/interface-performance.jpg" type="image/jpeg" />
+      <category>Engineering</category>
+      <category>Performance</category>
+      <category>UX</category>
+    </item>
+    <item>
+      <title>Notes on AI-assisted Engineering Without Losing the Craft</title>
+      <link>https://portfolios-ruby-alpha.vercel.app/journal/ai-assisted-engineering</link>
+      <guid isPermaLink="true">https://portfolios-ruby-alpha.vercel.app/journal/ai-assisted-engineering</guid>
+      <pubDate>Wed, 18 Feb 2026 00:00:00 GMT</pubDate>
+      <description>Generated code is a draft, not a decision. The parts of this job that resist automation are exactly the parts that were always the job.</description>
+      <enclosure url="https://portfolios-ruby-alpha.vercel.app/journal/ai-assisted-engineering.jpg" type="image/jpeg" />
+      <category>Engineering</category>
+      <category>Process</category>
+      <category>AI</category>
+    </item>
+    <item>
+      <title>Building for Real Bandwidth: Lessons from Shipping in Nigeria</title>
+      <link>https://portfolios-ruby-alpha.vercel.app/journal/building-for-bandwidth</link>
+      <guid isPermaLink="true">https://portfolios-ruby-alpha.vercel.app/journal/building-for-bandwidth</guid>
+      <pubDate>Thu, 22 Jan 2026 00:00:00 GMT</pubDate>
+      <description>Designing for unreliable networks is not a compromise on quality. It is the most honest performance critique you will ever receive.</description>
+      <enclosure url="https://portfolios-ruby-alpha.vercel.app/journal/building-for-bandwidth.jpg" type="image/jpeg" />
+      <category>Engineering</category>
+      <category>Performance</category>
+      <category>Product</category>
+    </item>
+    <item>
+      <title>On Longevity: Building Products That Outlive Their Launch</title>
+      <link>https://portfolios-ruby-alpha.vercel.app/journal/on-longevity</link>
+      <guid isPermaLink="true">https://portfolios-ruby-alpha.vercel.app/journal/on-longevity</guid>
+      <pubDate>Fri, 05 Dec 2025 00:00:00 GMT</pubDate>
+      <description>Launch is the cheapest day in a product’s life. What survives is what was designed for maintenance by someone who was not in the room.</description>
+      <enclosure url="https://portfolios-ruby-alpha.vercel.app/journal/on-longevity.jpg" type="image/jpeg" />
+      <category>Product</category>
+      <category>Process</category>
+    </item>
+  </channel>
+</rss>
