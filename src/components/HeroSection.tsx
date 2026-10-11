@@ -112,7 +112,7 @@ export default function HeroSection() {
     <section
       id="home"
       ref={containerRef}
-      className="relative w-full min-h-[100svh] flex items-center bg-bg px-5 sm:px-8 md:px-12 lg:px-16 pt-28 pb-16"
+      className="relative w-full min-h-[100svh] flex items-center px-5 sm:px-8 md:px-12 lg:px-16 pt-28 pb-16"
     >
       <div className="absolute inset-0 z-0 pointer-events-none">
         <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-bg to-transparent" />

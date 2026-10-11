@@ -89,6 +89,10 @@ export default function VideoWallpaper() {
       }
     }
 
+    // React's `muted` prop doesn't reliably set the DOM property, which
+    // silently blocks autoplay — force it before the first play.
+    video.muted = true
+    video.defaultMuted = true
     video.play().catch(() => {})
     window.addEventListener('scroll', onScroll, { passive: true })
     document.addEventListener('visibilitychange', onVisibility)
