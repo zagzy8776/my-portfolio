@@ -80,3 +80,17 @@ build/
 .system_generated/
 .tempmediaStorage/
 .gemini/
+
+# Env
+.env
+
+# Dev leftovers
+dev.log
+dev.err
+dev2.log
+dev2.err
+dev3.log
+dev3.err
+
+# Large local assets (keep repo lean)
+/assets/
